@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 29, 2026 at 08:57 AM
+-- Generation Time: Jan 29, 2026 at 01:20 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.26
 
@@ -46,7 +46,7 @@ CREATE TABLE `blogs` (
 --
 
 INSERT INTO `blogs` (`id`, `title`, `subtitle`, `slug`, `category_id`, `image`, `description`, `content`, `is_published`, `created_at`, `updated_at`) VALUES
-(1, 'Chief', 'National', 'chief', 2, 'blog_images/PRba3lBr1Ierze0mXezr22vsKPjjiSqjidXup0Zr.jpg', 'Consectetur', '<p>test</p>', 0, '2026-01-27 23:14:16', '2026-01-27 23:46:22');
+(1, 'Blog Test 1', 'National', 'chief', 2, 'blog_images/PRba3lBr1Ierze0mXezr22vsKPjjiSqjidXup0Zr.jpg', 'This is a test description', '<p>test</p>', 1, '2026-01-27 23:14:16', '2026-01-29 06:38:42');
 
 -- --------------------------------------------------------
 
@@ -93,7 +93,8 @@ CREATE TABLE `categories` (
 
 INSERT INTO `categories` (`id`, `title`, `slug`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Education', 'education', 1, '2026-01-13 03:59:34', '2026-01-13 03:59:34'),
-(2, 'Test', 'test', 1, '2026-01-27 23:44:58', '2026-01-27 23:44:58');
+(2, 'Lifestyle', 'lifestyle', 1, '2026-01-27 23:44:58', '2026-01-29 07:19:04'),
+(3, 'Science', 'science', 1, '2026-01-29 07:18:49', '2026-01-29 07:18:49');
 
 -- --------------------------------------------------------
 
@@ -183,11 +184,24 @@ CREATE TABLE `links` (
   `category_id` bigint UNSIGNED NOT NULL,
   `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
+  `pricing_type` enum('featured','regular','reciprocal') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'regular',
   `status` enum('pending','approved','rejected') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `hits` int NOT NULL DEFAULT '0',
+  `sort_order` int NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `links`
+--
+
+INSERT INTO `links` (`id`, `user_id`, `category_id`, `url`, `title`, `slug`, `description`, `pricing_type`, `status`, `hits`, `sort_order`, `created_at`, `updated_at`) VALUES
+(9, 9, 1, 'https://www.youtube.com/', 'Global Functionality Agent', 'test', 'test', 'regular', 'approved', 23, 1, '2026-01-29 04:18:34', '2026-01-29 07:18:10'),
+(10, 7, 1, 'https://inoodex.com/', 'National Research Technician', 'national-research-technician-CmMKNk', 'Debitis quam deserunt beatae maxime omnis dolorem repellendus corporis voluptatibus.', 'featured', 'approved', 3, 0, '2026-01-29 06:30:18', '2026-01-29 07:05:45'),
+(11, 7, 1, 'https://inoodex.com/', 'Regional Intranet Manager', 'regional-intranet-manager-hUAmW5', 'Debitis quasi voluptatem dolor praesentium.', 'reciprocal', 'approved', 3, 0, '2026-01-29 06:40:54', '2026-01-29 07:05:43');
 
 -- --------------------------------------------------------
 
@@ -221,7 +235,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (13, '2026_01_13_071832_add_is_admin_to_users', 1),
 (14, '2026_01_13_120916_add_plan_to_users_table', 2),
 (15, '2026_01_28_044835_create_blogs_table', 3),
-(16, '2026_01_28_063223_create_contact_messages_table', 4);
+(16, '2026_01_28_063223_create_contact_messages_table', 4),
+(17, '2026_01_29_092706_add_pricing_type_to_links_table', 5),
+(18, '2026_01_29_181000_add_slug_hits_sort_order_to_links_table', 6);
 
 -- --------------------------------------------------------
 
@@ -234,6 +250,13 @@ CREATE TABLE `password_reset_tokens` (
   `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `password_reset_tokens`
+--
+
+INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
+('hasssaninoodex@gmail.com', '$2y$12$bB4VueDNVgTmSzMolGTPJuNDpTeEoJCIrCgZYJre03..v6sVnSxTC', '2026-01-29 03:14:59');
 
 -- --------------------------------------------------------
 
@@ -324,7 +347,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('vsof6lKrdxxKlzvgLsuEqR9uc6xe7V8SpVU9eM38', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiR1pKemtucGxUMXcxcWh5d3pJaG42aVkwdGNsTWN3RGx2RTI4SUx2UiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1769676864);
+('1kh381ec8TCikxt8ndPFZVaE7tQNrutwAsmtGxwg', 7, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0', 'YTo2OntzOjY6Il90b2tlbiI7czo0MDoiSWFYSjYzOGM1aDdKNEttVTBpSzZ4SmtxRklFc1BiSkF3YWpENjBiSCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO3M6NToicm91dGUiO3M6OToiZGFzaGJvYXJkIjt9czoxOToic3VibWl0X2xpbmtfY2FwdGNoYSI7czo2OiJJOTNaT0wiO3M6NzoiY2FwdGNoYSI7czo2OiJNRFY1TFIiO3M6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjc7fQ==', 1769692772);
 
 -- --------------------------------------------------------
 
@@ -368,8 +391,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `suspended_at`, `suspension_reason`, `is_admin`, `plan`) VALUES
-(1, 'Inoodex', 'hello@inoodex.com', NULL, '$2y$12$IZiKxHjZatQDIzI.494pwOmvlEt2fuB7Q.26zMhpwM2WDsA49Io3W', 'fSAtwkU55mHOhykfHQAXPScmhKeEpNZdwiwLmJhzlQbpxvMD21fVdmpub5BC', '2026-01-13 01:35:35', '2026-01-13 01:35:35', NULL, NULL, 1, 'free'),
-(3, 'Md Hasan', 'test1@example.com', NULL, '$2y$12$vsqTh6LqKx97aBBOW2Tp3e20nhMfookgJUDOA1QcRCistOsykawsu', NULL, '2026-01-29 02:52:40', '2026-01-29 02:52:40', NULL, NULL, 0, 'free');
+(7, 'Inoodex', 'hello@inoodex.com', NULL, '$2y$12$Jv9yhWx5yw8YLo3rpgRmUur05Je3TvsZGv.QwYQObIebLIPF3etfm', NULL, '2026-01-29 03:54:44', '2026-01-29 03:54:44', NULL, NULL, 1, 'free'),
+(9, 'Price Wintheiser', 'your.email+fakedata30704@gmail.com', NULL, '$2y$12$wjX2wZtrQ5J0lAVmdq3x..VsdsCGI4hIYusqSBH5dd5muFs3Vtb2G', '8wXzLykNW0lMHGrprsHFWA3QHLtRZjWLHLHXKcDHOMg4zBYieLrHwkPqcMZs', '2026-01-29 04:18:29', '2026-01-29 04:22:10', NULL, NULL, 0, 'free');
 
 -- --------------------------------------------------------
 
@@ -384,13 +407,6 @@ CREATE TABLE `user_roles` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `user_roles`
---
-
-INSERT INTO `user_roles` (`id`, `user_id`, `role_id`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -454,6 +470,7 @@ ALTER TABLE `job_batches`
 --
 ALTER TABLE `links`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `links_slug_unique` (`slug`),
   ADD KEY `links_user_id_foreign` (`user_id`),
   ADD KEY `links_category_id_foreign` (`category_id`);
 
@@ -544,13 +561,13 @@ ALTER TABLE `blogs`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `contact_messages`
 --
 ALTER TABLE `contact_messages`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -568,13 +585,13 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `links`
 --
 ALTER TABLE `links`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -610,7 +627,7 @@ ALTER TABLE `subscriptions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user_roles`

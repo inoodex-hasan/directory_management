@@ -26,7 +26,7 @@
     @foreach ($sidebar_links as $link)
         <div class="latest-item">
             <div>{{ $link->title }}</div>
-            <small>{{ $link->url }}</small>
+            <a href="{{ $link->url }}" target="_blank"><small>{{ $link->url }}</small></a>
         </div>
     @endforeach
 </div>
