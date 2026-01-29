@@ -1,0 +1,28 @@
+/**
+ *
+ * You can write your CSS code here, DO NOT touch the default JavaScript file
+ * because it will make it harder for you to update.
+ * 
+ */
+
+/* Sticky Footer - Ensures footer stays at bottom when content is low */
+#app {
+    min-height: 100vh;
+}
+
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1 0 auto;
+}
+
+.main-footer {
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+/*# sourceMappingURL=custom.css.map */
