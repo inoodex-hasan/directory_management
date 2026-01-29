@@ -52,6 +52,11 @@
                     <hr>
 
                     <div class="form-group w-50">
+                        <label class="font-weight-bold">Sort Order (Lower is higher)</label>
+                        <input type="number" name="sort_order" class="form-control" value="{{ $link->sort_order ?? 0 }}">
+                    </div>
+
+                    <div class="form-group w-50">
                         <label class="font-weight-bold">Change Decision / Status</label>
                         <select name="status" class="form-control selectric">
                             <option value="pending" {{ $link->status == 'pending' ? 'selected' : '' }}>Pending</option>

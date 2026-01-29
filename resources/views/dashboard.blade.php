@@ -39,19 +39,19 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card card-statistic-1">
-                        <div class="card-icon bg-success"><i class="fas fa-plus"></i></div>
-                        <a href="{{ route('links.create') }}" style="text-decoration: none;">
-                            <div class="card-wrap">
-                                <div class="card-header">
-                                    <h4 class="text-success">Submit New Link</h4>
-                                </div>
-                                <div class="card-body" style="color: #47c363;">+</div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                <!-- <div class="col-md-4">
+                                    <div class="card card-statistic-1">
+                                        <div class="card-icon bg-success"><i class="fas fa-plus"></i></div>
+                                        <a href="{{ route('links.create') }}" style="text-decoration: none;">
+                                            <div class="card-wrap">
+                                                <div class="card-header">
+                                                    <h4 class="text-success">Submit New Link</h4>
+                                                </div>
+                                                <div class="card-body" style="color: #47c363;">+</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div> -->
             </div>
         @endif
 

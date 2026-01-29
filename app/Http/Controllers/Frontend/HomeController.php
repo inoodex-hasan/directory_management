@@ -2,37 +2,55 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Models\Category;
+use App\Models\{Category, Link, Blog, User};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
-    public function index(){
-        $categories = Category::where('status', '1')
-                        // ->withCount('approvedLinks')
-                        // ->orderBy('approved_links_count', 'desc')
-                        // ->take(10)
-                        ->get();
-        return view('frontend.home', compact('categories'));
-    }
-
-    public function categoryPosts($slug){
-        $category = Category::where('slug', $slug)->firstOrFail();
-        $posts = $category->posts()->where('status', 'published')->paginate(10);
-        return view('frontend.category_posts', compact('category', 'posts'));
-    }
-
-    public function submit_link(){
+    public function index()
+    {
         $categories = Category::where('status', '1')->get();
-        return view('frontend.pages.submit_link', compact('categories'));
+        $links = Link::where('status', 'approved')
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        $blogs = Blog::where('is_published', '1')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        return view('frontend.home', compact('categories', 'links', 'blogs'));
     }
 
-    public function login(){
+    public function categoryPosts($slug)
+    {
+        $category = Category::where('slug', $slug)->firstOrFail();
+        $links = $category->links()
+            ->where('status', 'approved')
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        return view('frontend.category_posts', compact('category', 'links'));
+    }
+
+    public function submit_link()
+    {
+        $links = Link::where('status', 'pending')->get();
+        $categories = Category::where('status', '1')->get();
+        $blogs = Blog::where('is_published', '1')->get();
+        return view('frontend.pages.submit_link', compact('categories', 'links', 'blogs'));
+    }
+
+    public function login()
+    {
         return view('frontend.pages.login');
     }
 
-    public function register(){
+    public function register()
+    {
         return view('frontend.pages.register');
     }
 
@@ -80,9 +98,52 @@ class HomeController extends Controller
         // Clear the captcha from session after verification
         session()->forget('submit_link_captcha');
 
-        // Here you would typically save the link submission to database
-        // For now, we'll just return success message
+        // Handle User Logic
+        $user = auth()->user();
 
-        return back()->with('success', 'Your link has been submitted successfully! It will be reviewed shortly.');
+        if (!$user) {
+            // Check if user exists by email
+            $user = User::where('email', $validated['email'])->first();
+
+            if (!$user) {
+                // Create new user if not exists
+                $user = User::create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'password' => Hash::make(Str::random(16)),
+                    'plan' => 'free',
+                ]);
+
+                // Send password setup email (reset link)
+                Password::sendResetLink($user->only('email'));
+            }
+        }
+
+        // Save the link submission to database
+        $links = Link::create([
+            'user_id' => $user->id,
+            'category_id' => $validated['category'],
+            'url' => $validated['url'],
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'pricing_type' => $validated['pricing'],
+            'status' => 'pending',
+        ]);
+
+        return back()->with('success', 'Your link has been submitted successfully! It will be reviewed shortly. We sent you an email to set up your password. Please check your email.');
     }
+
+    public function showLink($slug)
+    {
+        $link = Link::where('slug', $slug)->firstOrFail();
+
+        $link->increment('hits');
+
+        $categories = Category::where('status', '1')->get();
+        $links = collect([$link]);
+        $blogs = Blog::where('is_published', '1')->get();
+
+        return view('frontend.pages.link-details', compact('categories', 'links', 'blogs'));
+    }
+
 }

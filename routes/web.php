@@ -2,11 +2,18 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Auth, Route};
 use App\Models\Link;
-use App\Http\Controllers\Frontend\{ContactController, HomeController as FrontendHomeController, LoginController, RegisterController};
+use App\Http\Controllers\Frontend\{ContactController, HomeController as FrontendHomeController, LoginController, RegisterController, ForgotPasswordController};
 use App\Http\Controllers\{DashboardController, PaypalController, UserDashboardController};
 use App\Http\Controllers\Admin\{BlogController, CategoryController, ContactMessageController, LinkController, RoleController, UserRoleController};
 
 Route::get('/', [FrontendHomeController::class, 'index'])->name('home');
+
+Route::middleware(['guest'])->group(function () {
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+});
 
 Route::middleware(['auth'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('category/{slug}/posts', [FrontendHomeController::class, 'categoryPosts'])->name('category.posts');
@@ -16,19 +23,21 @@ Route::get('/contact/captcha', [ContactController::class, 'generateCaptcha'])->n
 Route::get('/register', [FrontendHomeController::class, 'register'])->name('frontend.register');
 Route::post('/register', [RegisterController::class, 'register'])->name('frontend.register.authenticate');
 
-Route::get( '/submit_link', [FrontendHomeController::class, 'submit_link'])->name('frontend.submit_link');
+Route::get('/submit_link', [FrontendHomeController::class, 'submit_link'])->name('frontend.submit_link');
 Route::get('/submit_link/captcha', [FrontendHomeController::class, 'generateCaptcha'])->name('frontend.submit_link.captcha');
 Route::post('/submit_link/submit', [FrontendHomeController::class, 'submitLink'])->name('frontend.submit_link.submit');
+
+Route::get('/link-details/{slug}', [FrontendHomeController::class, 'showLink'])->name('frontend.link-details');
 
 
 Route::get('/login', [FrontendHomeController::class, 'login'])->name('frontend.login');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('frontend.login.authenticate');
 Route::post('/logout', function (Request $request) {
     Auth::logout();
- 
+
     $request->session()->invalidate();
     $request->session()->regenerateToken();
- 
+
     return redirect('/');
 })->name('logout');
 
@@ -45,9 +54,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('links/pending', [LinkController::class, 'pending'])->name('admin.links.pending');
     Route::get('/links/processed', [LinkController::class, 'processed'])->name('admin.links.processed');
-    Route::patch('links/{link}/status', [LinkController::class, 'updateStatus'])->name('admin.links.status');
-    Route::get('/links/{link}/edit', [LinkController::class, 'edit'])->name('admin.links.edit');
-    Route::put('/links/{link}', [LinkController::class, 'update'])->name('admin.links.update');
+    Route::patch('links/{link:id}/status', [LinkController::class, 'updateStatus'])->name('admin.links.status');
+    Route::get('/links/{link:id}/edit', [LinkController::class, 'edit'])->name('admin.links.edit');
+    Route::put('/links/{link:id}', [LinkController::class, 'update'])->name('admin.links.update');
 
     Route::resource('blogs', BlogController::class)->names('admin.blogs');
 });
@@ -66,7 +75,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/links/create', [LinkController::class, 'create'])->name('links.create');
+    // Route::get('/links/create', [LinkController::class, 'create'])->name('links.create');
     Route::post('/links/store', [LinkController::class, 'store'])->name('links.store');
     Route::get('/links', [LinkController::class, 'index'])->name('links.index');
 });
@@ -74,4 +83,6 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/paypal/create', [PaypalController::class, 'createOrder'])->name('paypal.create');
 Route::post('/paypal/capture', [PaypalController::class, 'captureOrder'])->name('paypal.capture');
 
-Route::get('/pricing', function() {return view('pricing');})->middleware('auth')->name('pricing');
+Route::get('/pricing', function () {
+    return view('pricing');
+})->middleware('auth')->name('pricing');

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\Models\{Category, ContactMessage};
+use App\Models\{Category, ContactMessage, Link};
 use App\Http\Controllers\Controller;
 
 class ContactController extends Controller
@@ -14,8 +14,9 @@ class ContactController extends Controller
      */
     public function index()
     {
+        $links = Link::where('status', 'approved')->get();
         $categories = Category::where('status', '1')->get();
-        return view('frontend.pages.contact', compact('categories'));
+        return view('frontend.pages.contact', compact('categories', 'links'));
     }
 
     /**
@@ -25,10 +26,10 @@ class ContactController extends Controller
     {
         // Generate a random 6-character alphanumeric code
         $captcha = strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6));
-        
+
         // Store the captcha in session
         Session::put('captcha', $captcha);
-        
+
         return response()->json([
             'captcha' => $captcha
         ]);
@@ -69,5 +70,5 @@ class ContactController extends Controller
         return back()->with('success', 'Your message has been sent successfully!');
     }
 
-    
+
 }

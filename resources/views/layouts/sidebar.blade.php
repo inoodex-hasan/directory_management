@@ -21,8 +21,7 @@
             @if (auth()->check() && auth()->user()->isAdmin())
                 <li class="menu-header">Home</li>
                 <li class="dropdown {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i
-                            class="fas fa-columns"></i>
+                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i>
                         <span>Category</span></a>
                     <ul class="dropdown-menu">
                         <li><a class="nav-link" href="{{ route('admin.categories.create') }}">Add</a></li>
@@ -38,8 +37,7 @@
                     </ul>
                 </li>
                 <li class="dropdown {{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i
-                            class="fas fa-newspaper"></i>
+                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-newspaper"></i>
                         <span>Blog</span></a>
                     <ul class="dropdown-menu">
                         <li><a class="nav-link" href="{{ route('admin.blogs.create') }}">Create</a></li>
@@ -48,16 +46,14 @@
                 </li>
                 {{-- <li class="menu-header">Administration</li>
                 <li class="dropdown">
-                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i
-                            class="fas fa-users"></i>
+                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-users"></i>
                         <span>Users</span></a>
                     <ul class="dropdown-menu">
                         <li><a class="nav-link" href="{{ route('admin.user-roles.index') }}">Manage Roles</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i
-                            class="fas fa-shield-alt"></i>
+                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-shield-alt"></i>
                         <span>Roles</span></a>
                     <ul class="dropdown-menu">
                         <li><a class="nav-link" href="{{ route('admin.roles.index') }}">Manage</a></li>
@@ -68,8 +64,7 @@
             @if (auth()->check() && !auth()->user()->isAdmin())
                 <li class="menu-header">Home</li>
                 <li class="dropdown {{ request()->routeIs('links.*') ? 'active' : '' }}">
-                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i
-                            class="fas fa-columns"></i>
+                    <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i>
                         <span>Submit Url</span></a>
                     <ul class="dropdown-menu">
                         <li><a class="nav-link" href="{{ route('links.create') }}">Submit</a></li>

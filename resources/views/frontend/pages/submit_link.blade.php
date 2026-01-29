@@ -73,8 +73,8 @@
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="pricing" id="regular"
-                                        value="regular" checked>
+                                    <input class="form-check-input" type="radio" name="pricing" id="regular" value="regular"
+                                        checked>
                                     <label class="form-check-label" for="regular">
                                         Standard links (Reviewed in about 7 days) — $1.99 / Month
                                     </label>
@@ -97,8 +97,8 @@
                                 <label for="title" class="form-label">
                                     Title <span class="required-star">*</span>
                                 </label>
-                                <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                    id="title" name="title" required value="{{ old('title') }}">
+                                <input type="text" class="form-control @error('title') is-invalid @enderror" id="title"
+                                    name="title" required value="{{ old('title') }}">
                                 @error('title')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -117,8 +117,8 @@
 
                             <div class="col-md-12">
                                 <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
-                                    rows="4" maxlength="1000">{{ old('description') }}</textarea>
+                                <textarea class="form-control @error('description') is-invalid @enderror" id="description"
+                                    name="description" rows="4" maxlength="1000">{{ old('description') }}</textarea>
                                 <div class="form-text text-muted text-end">Limit: 1000 characters</div>
                                 @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -133,7 +133,8 @@
 
                             <div class="col-md-12">
                                 <label for="meta-description" class="form-label">META Description</label>
-                                <textarea class="form-control" id="meta-description" name="meta-description" rows="3" maxlength="250"></textarea>
+                                <textarea class="form-control" id="meta-description" name="meta-description" rows="3"
+                                    maxlength="250"></textarea>
                                 <div class="form-text text-muted text-end">Limit: 250 characters</div>
                             </div> --}}
 
@@ -141,8 +142,8 @@
                                 <label for="name" class="form-label">
                                     Your Name <span class="required-star">*</span>
                                 </label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    id="name" name="name" required value="{{ old('name') }}">
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
+                                    name="name" required value="{{ old('name') }}">
                                 @error('name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -152,8 +153,8 @@
                                 <label for="email" class="form-label">
                                     Your Email <span class="required-star">*</span>
                                 </label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    id="email" name="email" required value="{{ old('email') }}">
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
+                                    name="email" required value="{{ old('email') }}">
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -167,9 +168,8 @@
                                     name="category" required>
                                     <option value="" selected disabled>Select category...</option>
                                     @foreach ($categories as $cat)
-                                        <option value="{{ $cat->id }}"
-                                            {{ old('category') == $cat->id ? 'selected' : '' }}>
-                                            {{ $cat->name }}
+                                        <option value="{{ $cat->id }}" {{ old('category') == $cat->id ? 'selected' : '' }}>
+                                            {{ $cat->title }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -206,13 +206,13 @@
                             </label>
                             <div class="captcha-box mb-2">
                                 <span class="captcha" id="captcha-display"></span>
-                                <button type="button" class="btn btn-sm btn-secondary reload-captcha"
-                                    title="Reload Captcha" id="reload-captcha">
+                                <button type="button" class="btn btn-sm btn-secondary reload-captcha" title="Reload Captcha"
+                                    id="reload-captcha">
                                     <i class="fas fa-sync-alt"></i>
                                 </button>
                             </div>
-                            <input type="text" class="form-control @error('captcha') is-invalid @enderror"
-                                name="captcha" required placeholder="Enter the code above">
+                            <input type="text" class="form-control @error('captcha') is-invalid @enderror" name="captcha"
+                                required placeholder="Enter the code above">
                             @error('captcha')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -247,7 +247,7 @@
 
     @push('scripts')
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const captchaDisplay = document.getElementById('captcha-display');
                 const reloadButton = document.getElementById('reload-captcha');
 
@@ -267,7 +267,7 @@
                 loadCaptcha();
 
                 // Reload captcha on button click
-                reloadButton.addEventListener('click', function() {
+                reloadButton.addEventListener('click', function () {
                     loadCaptcha();
                 });
             });

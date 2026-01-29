@@ -29,6 +29,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'plan',
     ];
 
     /**
@@ -42,7 +43,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-    'is_admin' => 'boolean', 
+        'is_admin' => 'boolean',
     ];
 
     /**
@@ -59,36 +60,36 @@ class User extends Authenticatable
     }
 
     public function links()
-{
-    return $this->hasMany(Link::class);
-}
+    {
+        return $this->hasMany(Link::class);
+    }
 
-public function subscription()
-{
-    return $this->hasOne(Subscription::class);
-}
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
+    }
 
-public function isPaid()
-{
-    return $this->subscription && $this->subscription->type === 'paid' && $this->subscription->expires_at > now();
-}
+    public function isPaid()
+    {
+        return $this->subscription && $this->subscription->type === 'paid' && $this->subscription->expires_at > now();
+    }
 
-// public function role()
+    // public function role()
 // {
 //     return $this->belongsTo(Role::class, 'role_id'); 
 // }
 
-public function isAdmin(): bool
-{
-    return (bool) $this->is_admin;
-}
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_admin;
+    }
 
-protected static function booted()
-{
-    static::created(function ($user) {
-        if ($user->id === 1) {
-            $user->update(['is_admin' => true]);
-        }
-    });
-}
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            if ($user->id === 1) {
+                $user->update(['is_admin' => true]);
+            }
+        });
+    }
 }

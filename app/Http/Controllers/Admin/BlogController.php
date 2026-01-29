@@ -29,6 +29,7 @@ class BlogController extends Controller
             'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
             'description' => 'required',
             'content' => 'required',
+            'is_published' => 'required|boolean',
         ]);
 
         if ($request->hasFile('image')) {
@@ -60,6 +61,7 @@ class BlogController extends Controller
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|max:2048',
             'description' => 'required',
+            'is_published' => 'required|boolean',
         ]);
 
         if ($request->hasFile('image')) {
@@ -78,4 +80,3 @@ class BlogController extends Controller
         return redirect()->route('admin.blogs.index')->with('success', 'Blog deleted successfully.');
     }
 }
-    
